@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.utils;
 
 import java.util.HashMap;
 
-public enum GenerateID {
+public enum IdGenerator {
 
     INSTANCE;
 

@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.utils.GenerateID;
+import ru.yandex.practicum.filmorate.utils.IdGenerator;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class FilmController {
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
         validate(film);
-        film.setId(GenerateID.INSTANCE.generateId(Film.class));
+        film.setId(IdGenerator.INSTANCE.generateId(Film.class));
         films.put(film.getId(), film);
         log.info("Фильм добавлен");
         return film;
