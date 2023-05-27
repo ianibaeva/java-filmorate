@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.utils.IdGenerator;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import static ru.yandex.practicum.filmorate.validator.Validator.validate;
 public class UserController {
 
     private final HashMap<Integer, User> users = new HashMap<>();
-    private int userId = 1;
 
     @GetMapping
     public List<User> getUsers() {
@@ -30,7 +30,7 @@ public class UserController {
     @PostMapping
     public User createUser(@Valid @RequestBody User user) throws ValidationException {
         validate(user);
-        user.setId(generateIdForUser());
+        user.setId(IdGenerator.INSTANCE.generateId(User.class));
         users.put(user.getId(), user);
         log.info("Пользователь добавлен.");
         return user;
@@ -47,9 +47,4 @@ public class UserController {
         }
         return user;
     }
-
-    private int generateIdForUser() {
-        return userId++;
-    }
-
 }
