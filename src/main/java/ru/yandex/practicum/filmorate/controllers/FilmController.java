@@ -19,33 +19,34 @@ import static ru.yandex.practicum.filmorate.validator.Validator.validate;
 public class FilmController {
 
     private final HashMap<Integer, Film> films = new HashMap<>();
-    private int filmId = 0;
-
-    @GetMapping
-    public List<Film> getFilms() {
-        log.debug("Текущее количество фильмов: {}", films.size());
-        return new ArrayList<>(films.values());
-    }
+    private int filmId = 1;
 
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) throws ValidationException {
         validate(film);
         film.setId(generateIdForFilm());
         films.put(film.getId(), film);
-        log.info("Фильм добавлен.");
+        log.info("Фильм добавлен");
         return film;
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
         validate(film);
-        if (films.get(film.getId()) == null) {
+        if (films.get(film.getId()) != null) {
             films.put(film.getId(), film);
-            log.info("Фильм изменен.");
+            log.info("Фильм обновлен.");
         } else {
-            throw new NotFoundException("Фильм по ID " + film.getId() + " не найден.");
+            log.debug("Фильм не найден.");
+            throw new NotFoundException("Film not found.");
         }
         return film;
+    }
+
+    @GetMapping
+    public List<Film> getFilms() {
+        log.debug("Текущее количество фильмов: {}", films.size());
+        return new ArrayList<>(films.values());
     }
 
     private int generateIdForFilm() {
