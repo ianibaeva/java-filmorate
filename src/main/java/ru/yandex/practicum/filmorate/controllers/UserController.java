@@ -19,7 +19,7 @@ import static ru.yandex.practicum.filmorate.validator.Validator.validate;
 public class UserController {
 
     private final HashMap<Integer, User> users = new HashMap<>();
-    private int userId = 0;
+    private int userId = 1;
 
     @GetMapping
     public List<User> getUsers() {
