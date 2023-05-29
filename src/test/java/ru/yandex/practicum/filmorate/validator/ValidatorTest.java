@@ -31,7 +31,7 @@ class ValidatorTest {
                 LocalDate.of(1989, 6, 12));
         userWithSpaceInLogin.setName("name");
         ValidationException e = assertThrows(ValidationException.class, () -> validate(userWithSpaceInLogin));
-        assertEquals("Логин не может содержать пробелы!", e.getMessage());
+        assertEquals("Логин не должен содержать пробелы и не может быть пустым", e.getMessage());
     }
 
     @Test
