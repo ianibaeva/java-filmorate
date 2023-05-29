@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.utils.IdGenerator;
@@ -31,6 +32,7 @@ public class UserController {
     public User createUser(@Valid @RequestBody User user) throws ValidationException {
         validate(user);
         user.setId(IdGenerator.INSTANCE.generateId(User.class));
+        checkEmail(user.getEmail());
         users.put(user.getId(), user);
         log.info("Пользователь добавлен.");
         return user;
@@ -43,8 +45,18 @@ public class UserController {
             users.put(user.getId(), user);
             log.info("Пользователь изменён.");
         } else {
+            log.debug("Пользователь по ID " + user.getId() + " не найден.");
             throw new NotFoundException("Пользователь по ID " + user.getId() + " не найден.");
         }
         return user;
     }
+
+    private void checkEmail(String email) throws ValidationException {
+        for (User user : users.values()) {
+            if (user.getEmail().equals(email)) {
+                throw new ObjectAlreadyExistException("Email уже занят.");
+            }
+        }
+    }
+
 }

@@ -37,8 +37,8 @@ public class FilmController {
             films.put(film.getId(), film);
             log.info("Фильм обновлен.");
         } else {
-            log.debug("Фильм не найден.");
-            throw new NotFoundException("Film not found.");
+            log.debug("Фильм по ID " + film.getId() + " не найден.");
+            throw new NotFoundException("Фильм по ID " + film.getId() + " не найден.");
         }
         return film;
     }
