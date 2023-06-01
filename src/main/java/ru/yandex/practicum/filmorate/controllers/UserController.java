@@ -1,62 +1,66 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.utils.IdGenerator;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import static ru.yandex.practicum.filmorate.validator.Validator.validate;
+import java.util.Set;
 
 @Slf4j
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
 
-    private final HashMap<Integer, User> users = new HashMap<>();
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public List<User> getUsers() {
-        log.debug("Текущее количество пользователей: {}", users.size());
-        return new ArrayList<>(users.values());
+        return userService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable int id) {
+        return userService.getById(id);
     }
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user) throws ValidationException {
-        validate(user);
-        user.setId(IdGenerator.INSTANCE.generateId(User.class));
-        checkEmail(user.getEmail());
-        users.put(user.getId(), user);
-        log.info("Пользователь добавлен.");
-        return user;
+    public User createUser(@Valid @RequestBody User user) {
+        return userService.create(user);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        validate(user);
-        if (users.get(user.getId()) != null) {
-            users.put(user.getId(), user);
-            log.info("Пользователь изменён.");
-        } else {
-            log.debug("Пользователь по ID " + user.getId() + " не найден.");
-            throw new NotFoundException("Пользователь по ID " + user.getId() + " не найден.");
-        }
-        return user;
+        return userService.update(user);
     }
 
-    private void checkEmail(String email) throws ValidationException {
-        for (User user : users.values()) {
-            if (user.getEmail().equals(email)) {
-                throw new ObjectAlreadyExistException("Email уже занят.");
-            }
-        }
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addToFriends(@PathVariable int id, @PathVariable int friendId) {
+        return userService.addFriend(userService.getById(id), userService.getById(friendId));
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public User removeFromFriends(@PathVariable int id, @PathVariable int friendId) {
+        return userService.removeFriend(userService.getById(id), userService.getById(friendId));
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getFriends(@PathVariable int id) {
+        return userService.getFriends(userService.getById(id));
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Set<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) {
+        return userService.getMutualFriends(userService.getById(id), userService.getById(otherId));
     }
 
 }
