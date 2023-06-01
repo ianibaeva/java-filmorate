@@ -66,9 +66,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public List<Film> getMostPopular(int count) {
         log.info("Список наиболее популярных фильмов.");
-        return films.values()
-                .stream().
-                sorted(this::compare)
+        return films.values().stream()
+                .sorted(this::compare)
                 .limit(count)
                 .collect(Collectors.toList());
     }
