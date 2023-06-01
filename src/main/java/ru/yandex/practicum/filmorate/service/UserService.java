@@ -7,9 +7,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -60,18 +59,14 @@ public class UserService {
         return user;
     }
 
-    public Set<User> getMutualFriends(User user1, User user2) {
-        Set<User> mutualFriends = new HashSet<>();
-        for (Integer id : user1.getFriendsId()) {
-            mutualFriends.add(users.getById(id));
-        }
-        for (Integer id : user2.getFriendsId()) {
-            mutualFriends.add(users.getById(id));
-        }
-        mutualFriends.remove(user1);
-        mutualFriends.remove(user2);
-        log.info("Список общих друзей пользователей " + user1.getName() + " и " + user2.getName());
-        return mutualFriends;
+    public List<User> getMutualFriends(int id, int otherId) {
+        User user = getById(id);
+        User friend = getById(otherId);
+        List<Integer> mutualFriends = new ArrayList<>(user.getFriendsId());
+        mutualFriends.retainAll(friend.getFriendsId());
+        return mutualFriends.stream()
+                .map(this::getById)
+                .collect(Collectors.toList());
     }
 
     public List<User> getFriends(User user) {

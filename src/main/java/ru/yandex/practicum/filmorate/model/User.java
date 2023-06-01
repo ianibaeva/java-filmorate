@@ -13,8 +13,7 @@ import java.util.Set;
 
 @Data
 public class User {
-    @Getter
-    @Setter
+
     private int id;
     @Email
     private final String email;
@@ -23,9 +22,6 @@ public class User {
     private String name;
     @Past
     private final LocalDate birthday;
-
-    @Setter
-    @Getter
     private Set<Integer> friendsId = new HashSet<>();
 
 }

@@ -13,8 +13,7 @@ import java.util.Set;
 
 @Data
 public class Film {
-    @Getter
-    @Setter
+
     private int id;
     @NotBlank
     @NonNull
@@ -25,11 +24,7 @@ public class Film {
     private final LocalDate releaseDate;
     @Positive
     private final int duration;
-    @Setter
-    @Getter
     private Set<Integer> usersLiked = new HashSet<>();
-    @Setter
-    @Getter
     private int likes = 0;
 
 }
