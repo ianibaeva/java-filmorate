@@ -2,15 +2,15 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.utils.ReleaseDateValidation;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
+@Slf4j
 public class Film {
 
     private int id;
@@ -24,10 +24,10 @@ public class Film {
     @Positive
     private final int duration;
     private Set<Integer> usersLiked = new HashSet<>();
-    private int likes = 0;
-    private MpaRating mpaRating;
-    private List<Genre> genres;
 
+    private final Mpa mpa;
+    private int rate;
+    private List<Genre> genres = new ArrayList<>();
 }
 
 

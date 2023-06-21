@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.validator;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -14,22 +16,29 @@ class ValidatorTest {
 
     @Test
     public void shouldNotValidateOldFilm() {
-        Film oldFilm = new Film("name", "description", LocalDate.of(1600, 11, 11), 1);
+        Film oldFilm =
+                new Film("Name", "Description",
+                        LocalDate.of(1600, 11, 11), 1, new Mpa(1, "G"));
+
         ValidationException e = assertThrows(ValidationException.class, () -> validate(oldFilm));
         assertEquals("Кино еще не родилось!", e.getMessage());
     }
 
     @Test
     public void shouldValidateFirstFilm() {
-        Film firstFilm = new Film("Name", "Description", LocalDate.of(1895, 12, 28), 1);
+        Film firstFilm =
+                new Film("Name", "Description",
+                        LocalDate.of(1895, 12, 28), 1, new Mpa(1, "G"));
+
         assertDoesNotThrow(() -> validate(firstFilm));
     }
 
     @Test
     public void shouldNotValidateLoginWithSpaces() {
-        User userWithSpaceInLogin = new User("user@yandex.ru", "user user",
-                LocalDate.of(1989, 6, 12));
+        User userWithSpaceInLogin =
+                new User("user@yandex.ru", "user user", LocalDate.of(1989, 6, 12));
         userWithSpaceInLogin.setName("name");
+
         ValidationException e = assertThrows(ValidationException.class, () -> validate(userWithSpaceInLogin));
         assertEquals("Логин не должен содержать пробелы и не может быть пустым", e.getMessage());
     }
