@@ -4,7 +4,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
 
-public interface FilmDao extends StandartDao<Film> {
+public interface FilmDao extends StandardDao<Film> {
 
     List<Film> getMostPopular(int count);
 }

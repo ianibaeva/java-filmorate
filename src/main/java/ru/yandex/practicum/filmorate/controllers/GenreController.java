@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/genres")
+@RequestMapping(value = "/genres")
 public class GenreController {
 
     private final GenreService service;
@@ -29,7 +29,7 @@ public class GenreController {
         return service.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public Genre getById(@PathVariable int id) {
         log.info("Получен GET запрос /genres/{}.", id);
         return service.getById(id);

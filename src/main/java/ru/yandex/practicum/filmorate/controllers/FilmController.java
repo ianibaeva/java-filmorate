@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/films")
+@RequestMapping(value = "/films")
 public class FilmController {
 
     private final FilmService filmService;
@@ -27,7 +27,7 @@ public class FilmController {
         return filmService.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public Film getById(@PathVariable int id) {
         log.info("Получен GET запрос /films/{}.", id);
         return filmService.getById(id);
@@ -45,19 +45,19 @@ public class FilmController {
         return filmService.update(film);
     }
 
-    @PutMapping("/{id}/like/{userId}")
+    @PutMapping(value = "/{id}/like/{userId}")
     public void addLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Получен PUT запрос /films/{}/like/{}.", id, userId);
         filmService.addLike(id, userId);
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
+    @DeleteMapping(value = "/{id}/like/{userId}")
     public void removeLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Получен DELETE запрос /films/{}/like/{}.", id, userId);
         filmService.removeLike(id, userId);
     }
 
-    @GetMapping("/popular")
+    @GetMapping(value = "/popular")
     public List<Film> getMostPopular(@RequestParam(defaultValue = "10") int count) {
         log.info("Получен GET запрос /films/popular?count={}.", count);
         return filmService.getMostPopular(count);

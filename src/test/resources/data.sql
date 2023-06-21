@@ -14,11 +14,11 @@ MERGE INTO MPA_RATING (MPA_ID, DESCRIPTION)
            (5, 'NC-17');
 
 INSERT INTO FILMS (NAME, DESCRIPTION, RELEASE_DATE, DURATION, RATE, MPA)
-    VALUES ('Хоббит', 'Про хоббитов', '2010-12-08', 200, 4, 1),
-           ('Аватар', 'Про синих', '2005-12-08', 100, 5, 5),
-           ('Звездный путь', 'Про космос', '2000-12-08', 200, 6, 3),
-           ('Бэтмен', 'Про бандитов', '1995-12-08', 100, 7, 4),
-           ('Титаник', 'Про море', '1990-12-08', 200, 8, 5);
+    VALUES ('Большой куш', 'Противодействие цыган', '2000-08-23', 104, 6, 4),
+           ('Shrek', 'Its Big!', '2001-04-22', 90, 2, 2),
+           ('Shrek 2', 'Not so far, far away...', '2004-05-08', 93, 3, 1),
+           ('Shrek the Third', 'Да приидет царствие его', '2007-05-06', 93, 5, 5),
+           ('Shrek Forever After', 'Последняя глава', '2010-04-21', 90, 3, 5);
 
 INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID)
     VALUES (1, 6),
@@ -33,11 +33,11 @@ INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID)
            (5, 6);
 
 INSERT INTO USERS (E_MAIL, LOGIN, NAME, BIRTHDAY)
-    VALUES ('qwe@mail.ru', 'Bilbo', 'Baggins', '1990-10-11'),
-           ('rty@mail.ru', 'Turuk_makto', 'Jeorge', '1990-10-11'),
-           ('uio@mail.ru', 'Spok', 'Noname', '1990-10-11'),
-           ('asd@mail.ru', 'Joker', 'Brus', '1990-10-11'),
-           ('fgh@mail.ru', 'Rosa', 'Douson', '1990-10-11');
+    VALUES ('qwe@mail.ru', 'Leonardo', 'Blue', '2004-10-11'),
+           ('rty@mail.ru', 'Michelangelo', 'Orange', '2004-10-11'),
+           ('uio@mail.ru', 'Donatello', 'Purple', '2004-10-11'),
+           ('asd@mail.ru', 'Raphael', 'Red', '2004-10-11'),
+           ('fgh@mail.ru', 'Splinter', 'Master', '1960-10-11');
 
 INSERT INTO FRIENDS (USER_ID, FRIEND_ID)
     VALUES (2, 3),

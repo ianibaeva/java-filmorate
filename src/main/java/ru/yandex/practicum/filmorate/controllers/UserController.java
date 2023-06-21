@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/users")
+@RequestMapping(value = "/users")
 public class UserController {
 
     private final UserService userService;
@@ -27,7 +27,7 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public User getById(@PathVariable int id) {
         log.info("Получен GET запрос /users/{}.", id);
         return userService.getById(id);
@@ -45,25 +45,25 @@ public class UserController {
         return userService.update(user);
     }
 
-    @PutMapping("/{id}/friends/{friendId}")
+    @PutMapping(value = "/{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info("Получен PUT запрос /users/{}/friends/{}.", id, friendId);
         userService.addFriend(id, friendId);
     }
 
-    @DeleteMapping("/{id}/friends/{friendId}")
+    @DeleteMapping(value = "/{id}/friends/{friendId}")
     public void removeFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info("Получен DELETE запрос /users/{}/friends/{}.", id, friendId);
         userService.removeFriend(id, friendId);
     }
 
-    @GetMapping("/{id}/friends")
+    @GetMapping(value = "/{id}/friends")
     public List<User> getFriends(@PathVariable int id) {
         log.info("Получен GET запрос /users/{}/friends.", id);
         return userService.getFriends(id);
     }
 
-    @GetMapping("/{id}/friends/common/{otherId}")
+    @GetMapping(value = "/{id}/friends/common/{otherId}")
     public List<User> getMutualFriends(@PathVariable int id, @PathVariable int otherId) {
         log.info("Получен GET запрос /users/{}/friends/common/{}", id, otherId);
         return userService.getMutualFriends(id, otherId);

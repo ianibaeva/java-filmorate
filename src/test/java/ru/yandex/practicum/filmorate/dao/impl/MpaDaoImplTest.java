@@ -26,7 +26,6 @@ class MpaDaoImplTest {
         Mpa g = mpa.getById(1);
         Mpa pg = mpa.getById(3);
         Mpa nc = mpa.getById(5);
-
         assertEquals("G", g.getName());
         assertEquals("PG-13", pg.getName());
         assertEquals("NC-17", nc.getName());
@@ -35,14 +34,12 @@ class MpaDaoImplTest {
     @Test
     void getByWrongId() {
         NotFoundException e = assertThrows(NotFoundException.class, () -> mpa.getById(7));
-
         assertEquals("Рейтинг по ID 7 не найден!", e.getMessage());
     }
 
     @Test
     void getAll() {
         List<Mpa> testList = mpa.getAll();
-
         assertEquals(5, testList.size());
         assertEquals("PG", testList.get(1).getName());
         assertEquals("R", testList.get(3).getName());

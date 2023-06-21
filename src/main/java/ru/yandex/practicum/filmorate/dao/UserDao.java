@@ -4,7 +4,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
-public interface UserDao extends StandartDao<User> {
+public interface UserDao extends StandardDao<User> {
 
     List<User> getMutualFriends(int userId, int friendId);
 

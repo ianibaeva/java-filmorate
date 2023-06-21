@@ -25,75 +25,60 @@ class UserDaoImplTest {
 
     @Test
     void add() {
-        // Arrange
-        User newUser = new User("xxx@mail.ru", "Amigo", LocalDate.of(1990, 12, 23));
-        // Act
+        User newUser = new User("qwerty@mail.ru", "Whats", LocalDate.of(1990, 12, 23));
         User addedUser = userDao.add(newUser);
-        // Assert
         assertEquals(6, addedUser.getId());
     }
 
     @Test
     void update() {
-        // Arrange
-        User newUser = new User("ZZZ@mail.ru", "Boba", LocalDate.of(1995, 10, 25));
+        User newUser = new User("asdfg@mail.ru", "Uuuup", LocalDate.of(1995, 10, 25));
         newUser.setId(1);
-        // Act
         userDao.update(newUser);
-        // Assert
         assertEquals(newUser, userDao.getById(1));
     }
 
     @Test
     void updateWithWrongId() {
-        // Arrange
-        User newUser = new User("ZZZ@mail.ru", "Boba", LocalDate.of(1995, 10, 25));
+        User newUser = new User("zxcvb@mail.ru", "Amigo", LocalDate.of(1995, 10, 25));
         newUser.setId(55);
-        // Act
         NotFoundException e = assertThrows(NotFoundException.class, () -> userDao.update(newUser));
-        // Assert
         assertEquals("Пользователь по ID 55 не найден!", e.getMessage());
     }
 
     @Test
     void delete() {
         int result = userDao.delete(5);
-
         assertEquals(1, result);
     }
 
     @Test
     void deleteWithWrongId() {
         int result = userDao.delete(12);
-
         assertEquals(0, result);
     }
 
     @Test
     void getById() {
         User user = userDao.getById(2);
-
-        assertEquals("Jeorge", user.getName());
+        assertEquals("Orange", user.getName());
     }
 
     @Test
     void getByWrongId() {
         NotFoundException e = assertThrows(NotFoundException.class, () -> userDao.getById(48));
-
         assertEquals("Пользователь по ID 48 не найден!", e.getMessage());
     }
 
     @Test
     void getAll() {
         List<User> users = userDao.getAll();
-
         assertEquals(4, users.size());
     }
 
     @Test
     void addFriend() {
         int result = friendsDao.add(1, 2);
-
         assertEquals(1, result);
     }
 
@@ -101,7 +86,6 @@ class UserDaoImplTest {
     void addFriendByWrongId() {
         NotFoundException e1 = assertThrows(NotFoundException.class, () -> friendsDao.add(-1, 2));
         NotFoundException e2 = assertThrows(NotFoundException.class, () -> friendsDao.add(1, -2));
-
         assertEquals("передан неверный идентификатор!", e1.getMessage());
         assertEquals("передан неверный идентификатор!", e2.getMessage());
     }
@@ -109,7 +93,6 @@ class UserDaoImplTest {
     @Test
     void removeFriend() {
         int result = friendsDao.remove(2, 4);
-
         assertEquals(1, result);
     }
 
@@ -117,7 +100,6 @@ class UserDaoImplTest {
     void removeFriendWithWrongId() {
         int result1 = friendsDao.remove(-1, 2);
         int result2 = friendsDao.remove(1, -2);
-
         assertEquals(0, result1);
         assertEquals(0, result2);
     }
@@ -125,28 +107,24 @@ class UserDaoImplTest {
     @Test
     void getFriends() {
         List<User> friends = userDao.getFriends(4);
-
         assertEquals(2, friends.size());
     }
 
     @Test
     void getFriendsWithWrongId() {
         List<User> friends = userDao.getFriends(55);
-
         assertEquals(0, friends.size());
     }
 
     @Test
     void getMutualFriends() {
         List<User> friends = userDao.getMutualFriends(2, 4);
-
         assertEquals(1, friends.size());
     }
 
     @Test
     void getMutualFriendsWithWrongId() {
         List<User> friends = userDao.getMutualFriends(-2, 4);
-
         assertEquals(0, friends.size());
     }
 }

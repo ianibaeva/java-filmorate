@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/mpa")
+@RequestMapping(value = "/mpa")
 public class MpaController {
 
     private final MpaService service;
@@ -29,7 +29,7 @@ public class MpaController {
         return service.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public Mpa getById(@PathVariable int id) {
         log.info("Получен GET запрос /mpa/{}.", id);
         return service.getById(id);
