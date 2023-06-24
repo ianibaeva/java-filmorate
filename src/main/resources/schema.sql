@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS films
     release_date date,
     duration integer,
     rate integer,
-    mpa integer REFERENCES mpa_rating (mpa_id) ON DELETE CASCADE,
-    CONSTRAINT duration_length CHECK (duration > 0)
+    mpa integer REFERENCES mpa_rating (mpa_id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE IF NOT EXISTS genres
 (
@@ -47,6 +47,11 @@ CREATE TABLE IF NOT EXISTS users
     login varchar NOT NULL,
     name varchar,
     birthday date
+);
+
+CREATE UNIQUE INDEX idx_users_email_login ON users (
+  e_mail,
+  login
 );
 
 CREATE TABLE IF NOT EXISTS film_likes
