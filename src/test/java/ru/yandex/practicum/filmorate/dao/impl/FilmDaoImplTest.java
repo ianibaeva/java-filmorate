@@ -8,9 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.dao.FilmDao;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,9 +39,16 @@ class FilmDaoImplTest {
         Film film = new Film("Harry Potter", "the boy who lived",
                 LocalDate.of(2001, 11, 4), 152, new Mpa(3, "PG-13"));
         film.setId(2);
+        film.setGenres(Arrays.asList(
+                new Genre(4, "Триллер"),
+                new Genre(5, "Документальный"),
+                new Genre(2, "Драма")
+        ));
         filmDao.update(film);
         assertEquals(film, filmDao.getById(2));
     }
+
+
 
     @Test
     void updateWithWrongId() {
