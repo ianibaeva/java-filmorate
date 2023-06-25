@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.dao.impl;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -9,14 +10,14 @@ import ru.yandex.practicum.filmorate.dao.FilmDao;
 import ru.yandex.practicum.filmorate.dao.SimpleDao;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 public class FilmDaoImpl implements FilmDao {
@@ -73,38 +74,72 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public Film getById(int id) {
-        String sqlQuery = "SELECT film_id, name, description, release_date, duration, rate, mpa FROM films " +
-                "WHERE film_id = ?";
+        String sqlQuery = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.rate, m.mpa_id, m.description as mdesc, g.genre_id, g.description as genre " +
+                "FROM films AS f " +
+                "LEFT JOIN MPA_RATING AS m ON f.mpa = m.mpa_id " +
+                "LEFT JOIN FILM_GENRE AS fg ON f.film_id = fg.film_id " +
+                "LEFT JOIN GENRES AS g ON fg.genre_id = g.genre_id where f.film_id = ?";
+
         try {
-            return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToFilm, id);
-        } catch (DataAccessException e) {
+            return jdbcTemplate.query(sqlQuery, arrayListResultSetExtractor, id).get(0);
+        } catch (DataAccessException | IndexOutOfBoundsException e) {
             throw new NotFoundException("Фильм по ID " + id + " не найден!");
         }
     }
 
     @Override
     public List<Film> getAll() {
-        String sqlQuery = "SELECT film_id, name, description, release_date, duration, rate, mpa FROM films";
 
-        return jdbcTemplate.query(sqlQuery, this::mapRowToFilm);
+        String sqlQuery = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.rate, m.mpa_id, m.description as mdesc, g.genre_id, g.description as genre " +
+                "FROM films AS f " +
+                "LEFT JOIN MPA_RATING AS m ON f.mpa = m.mpa_id " +
+                "LEFT JOIN FILM_GENRE AS fg ON f.film_id = fg.film_id " +
+                "LEFT JOIN GENRES AS g ON fg.genre_id = g.genre_id ";
+
+
+        return jdbcTemplate.query(sqlQuery, arrayListResultSetExtractor);
     }
 
     @Override
     public List<Film> getMostPopular(int count) {
-        String sqlQuery = "SELECT film_id, name, description, release_date, duration, rate, mpa " +
-                "FROM films ORDER BY rate DESC LIMIT ?";
+        String sqlQuery = "SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.rate, m.mpa_id, m.description as mdesc, g.genre_id, g.description as genre " +
+                "FROM films AS f " +
+                "LEFT JOIN MPA_RATING AS m ON f.mpa = m.mpa_id " +
+                "LEFT JOIN FILM_GENRE AS fg ON f.film_id = fg.film_id " +
+                "LEFT JOIN GENRES AS g ON fg.genre_id = g.genre_id ORDER BY rate desc Limit ?";
 
-        return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, count);
+        ArrayList<Film> result = jdbcTemplate.query(sqlQuery, arrayListResultSetExtractor, count);
+        result.sort(Comparator.comparingInt(Film::getRate).reversed());
+        return result;
     }
 
 
-    private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        Film film = new Film(resultSet.getString("name"), resultSet.getString("description"),
-                resultSet.getDate("release_date").toLocalDate(), resultSet.getInt("duration"),
-                mpaDao.getById(resultSet.getInt("mpa")));
-        film.setId(resultSet.getInt("film_id"));
-        film.setRate(resultSet.getInt("rate"));
+    ResultSetExtractor<ArrayList<Film>> arrayListResultSetExtractor = rs -> {
+        Map<Integer, Film> map = new HashMap();
 
-        return film;
-    }
+        while (rs.next()) {
+            int filmId = rs.getInt("film_id");
+            Film film = map.get(filmId);
+            if (film == null) {
+                film = new Film();
+                film.setId(filmId);
+                film.setName(rs.getString("name"));
+                film.setDescription(rs.getString("description"));
+                film.setReleaseDate(rs.getDate("release_date").toLocalDate());
+                film.setDuration(rs.getInt("duration"));
+                film.setRate(rs.getInt("rate"));
+                Mpa mpa = new Mpa();
+                mpa.setId(rs.getInt("mpa_id"));
+                mpa.setName(rs.getString("mdesc"));
+                film.setMpa(mpa);
+                map.put(filmId, film);
+            }
+            Genre genre = new Genre();
+            genre.setName(rs.getString("genre"));
+            genre.setId(rs.getInt("genre_id"));
+            film.getGenres().add(genre);
+        }
+
+        return new ArrayList<>(map.values());
+    };
 }

@@ -76,7 +76,9 @@ public class FilmService {
 
     public void addLike(int filmId, int userId) {
         Film film = filmDao.getById(filmId);
+        System.out.println("add like");
         film.setRate(film.getRate() + 1);
+        System.out.println(film);
         filmDao.update(film);
         likesDao.add(filmId, userId);
     }
