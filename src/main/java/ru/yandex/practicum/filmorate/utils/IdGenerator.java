@@ -9,15 +9,16 @@ public enum IdGenerator {
     private final HashMap<Class<?>, Integer> identifier = new HashMap<>();
 
     public int generateId(Class<?> clazz) {
+        int id;
         if (identifier.containsKey(clazz)) {
-            int id = identifier.get(clazz);
+            id = identifier.get(clazz);
             identifier.put(clazz, ++id);
-            return id;
 
         } else {
-            identifier.put(clazz, 1);
-            return 1;
+            id = 1;
+            identifier.put(clazz, id);
         }
+        return id;
     }
 
 }

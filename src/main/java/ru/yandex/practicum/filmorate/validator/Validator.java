@@ -13,6 +13,9 @@ public class Validator {
         if (film.getReleaseDate().isBefore(LocalDate.of(1885, 12, 28))) {
             throw new ValidationException(HttpStatus.BAD_REQUEST, "Кино еще не родилось!");
         }
+        if (film.getDuration() < 0) {
+            throw new ValidationException(HttpStatus.BAD_REQUEST, "Продолжительность фильма должна быть положительным числом");
+        }
     }
 
     public static void validate(User user) throws ValidationException {
